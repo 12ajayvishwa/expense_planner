@@ -1,6 +1,6 @@
-# xp
+# Expenses planner
 
-A new Flutter project.
+I expenses planner application you plan your weekly expenses and maintain.
 
 ## Getting Started
 
