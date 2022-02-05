@@ -1,5 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:xp/widgets/chart.dart';
 import './widgets/transation_list.dart';
@@ -20,18 +22,21 @@ class MyApp extends StatelessWidget {
       title: 'Personal Expenses',
       theme: ThemeData(
           primarySwatch: Colors.purple,
+          accentColor: Colors.amber,
+          errorColor: Colors.red,
           fontFamily: 'Quicksand',
           textTheme: ThemeData.light().textTheme.copyWith(
-              subtitle1: TextStyle(
+              subtitle1: const TextStyle(
                   fontFamily: 'OpenSans',
                   fontWeight: FontWeight.bold,
                   fontSize: 18)),
           appBarTheme: AppBarTheme(
               textTheme: ThemeData.light().textTheme.copyWith(
-                  subtitle1: TextStyle(
+                  subtitle1: const TextStyle(
                       fontFamily: 'OpenSans',
                       fontSize: 20,
-                      fontWeight: FontWeight.bold)))),
+                      fontWeight: FontWeight.bold),
+                  button: TextStyle(color: Colors.white)))),
       home: MyHomePage(),
     );
   }
@@ -49,8 +54,8 @@ class _MyHomePageState extends State<MyHomePage> {
   final amountController = TextEditingController();
 
   final List<Transaction> _userTransaction = [
-    Transaction(
-        id: "t1", title: "New Shoes", amount: 66.99, date: DateTime.now()),
+    // Transaction(
+    //     id: "t1", title: "New Shoes", amount: 66.99, date: DateTime.now()),
     // Transaction(
     //     id: "t2",
     //     title: "Weekly Groceries",
@@ -64,11 +69,11 @@ class _MyHomePageState extends State<MyHomePage> {
     }).toList();
   }
 
-  void _addNewTransation(String title, double amount) {
+  void _addNewTransation(String title, double amount, DateTime chosenDate) {
     final newTx = Transaction(
         title: title,
         amount: amount,
-        date: DateTime.now(),
+        date: chosenDate,
         id: DateTime.now().toString());
     setState(() {
       _userTransaction.add(newTx);
@@ -84,6 +89,12 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: () {},
               child: NewTransations(_addNewTransation));
         });
+  }
+
+  void _deleteTransactions(String id) {
+    setState(() {
+      _userTransaction.removeWhere((tx) => tx.id == id);
+    });
   }
 
   @override
@@ -106,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Chart(_recentTransactions),
-            TransationList(_userTransaction)
+            TransationList(_userTransaction, _deleteTransactions)
           ],
         ),
       ),
